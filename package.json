@@ -8,7 +8,7 @@
     "test": "./node_modules/.bin/jest"
   },
   "engines": {
-    "node": "8.x.x"
+    "node": ">=8.0.0 <11.0.0"
   },
   "repository": {
     "type": "git",
@@ -25,7 +25,7 @@
     "ioredis": "^3.2.2",
     "lodash": "^4.17.11",
     "pg": "^7.4.1",
-    "sequelize": "^5.8.12"
+    "sequelize": "^5.9.0"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
