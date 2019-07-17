@@ -23,7 +23,7 @@
   "dependencies": {
     "express": "^4.15.4",
     "ioredis": "^3.2.2",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.14",
     "pg": "^7.4.1",
     "sequelize": "^5.9.0"
   },
