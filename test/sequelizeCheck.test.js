@@ -63,9 +63,7 @@ describe('When running redis check', () => {
       host: 'localhost',
       dialect: 'mssql',
       dialectOptions: {
-        options: {
           encrypt: true,
-        }
       },
     });
     expect(authenticate.mock.calls).toHaveLength(1);
