@@ -1,0 +1,15 @@
+module.exports = {
+  HEALTH_STATUS_UP: 'up',
+  HEALTH_STATUS_DOWN: 'down',
+  HEALTY_STATUS_MESSAGE: 'OK',
+  CONFIG_REDIS_URL_KEY: 'redisurl',
+  CONFIG_CONNECTION_STRING_KEY: 'connectionstring',
+  REDIS_PROTOCOL: 'redis://',
+  CONFIG_REDIS_TYPE: 'redis',
+  REDIS_PORT_SECURE: '6380',
+  POSTGRES_DIALECT: 'postgres',
+  CONFIG_POSTGRES_URL_KEY: 'postgresurl',
+  POSTGRES_CONNECTION_PREFIX: 'postgres://',
+  CONFIG_SEQUELIZE_TYPE: 'sequelize',
+  CONFIG_DATABASE_KEY: 'database',
+};
