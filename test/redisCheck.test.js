@@ -89,7 +89,7 @@ describe('When running redis check', () => {
     expect(actual).toMatchObject({
       key: CONFIG_CONNECTION_STRING_KEY,
       path: 'path.to.key',
-      status: 'TESTERROR',
+      status: { code: 'TESTERROR' }.toString(),
     });
   });
 });

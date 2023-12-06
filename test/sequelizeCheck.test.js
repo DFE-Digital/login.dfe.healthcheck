@@ -1,7 +1,7 @@
 jest.mock('sequelize');
 
 const Sequelize = require('sequelize');
-const sequelizeCheck = require('./../lib/sequelizeCheck');
+const sequelizeCheck = require('../lib/sequelizeCheck');
 const constants = require('../constants/constants');
 
 const { CONFIG_CONNECTION_STRING_KEY, CONFIG_POSTGRES_URL_KEY, CONFIG_SEQUELIZE_TYPE } = constants;
@@ -13,12 +13,10 @@ describe('When running redis check', () => {
     authenticate = jest.fn();
     close = jest.fn();
     Sequelize.mockReset();
-    Sequelize.mockImplementation(() => {
-      return {
-        authenticate,
-        close,
-      };
-    });
+    Sequelize.mockImplementation(() => ({
+      authenticate,
+      close,
+    }));
   });
 
   it('then it should check if key is postgresurl', async () => {
@@ -66,7 +64,7 @@ describe('When running redis check', () => {
       host: 'localhost',
       dialect: 'mssql',
       dialectOptions: {
-          encrypt: true,
+        encrypt: true,
       },
     });
     expect(authenticate.mock.calls).toHaveLength(1);
@@ -92,7 +90,7 @@ describe('When running redis check', () => {
     expect(actual).toMatchObject({
       key: CONFIG_POSTGRES_URL_KEY,
       path: 'path.to.key',
-      status: 'some error message',
+      status: 'Error: some error message',
     });
   });
 });
