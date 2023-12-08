@@ -4,6 +4,7 @@ module.exports = {
   HEALTY_STATUS_MESSAGE: 'OK',
   CONFIG_REDIS_URL_KEY: 'redisurl',
   CONFIG_CONNECTION_STRING_KEY: 'connectionstring',
+  CONFIG_REDIS_CONNECTION_STRING_KEY: 'redisconnectionstring',
   REDIS_PROTOCOL: 'redis://',
   CONFIG_REDIS_TYPE: 'redis',
   REDIS_PORT_SECURE: '6380',
