@@ -10,5 +10,8 @@
   },
   "parserOptions": {
     "ecmaVersion": 2020
+  },
+  "env": {
+    "jest": true
   }
 }
