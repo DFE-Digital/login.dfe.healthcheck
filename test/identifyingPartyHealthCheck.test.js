@@ -1,9 +1,9 @@
 const identifyingPartyHealthCheck = require('../lib/identifyingPartyHealthCheck');
-const { getIdentifyingPartyHealthcheck, trimTrailingSlash, getIdentifyingPartyConfig } = require('../lib/utils');
+const { checkDependentServiceHealth, trimTrailingSlash, getIdentifyingPartyConfig } = require('../lib/utils');
 const constants = require('../constants/constants');
 
 jest.mock('../lib/utils', () => ({
-  getIdentifyingPartyHealthcheck: jest.fn(),
+  checkDependentServiceHealth: jest.fn(),
   trimTrailingSlash: jest.fn(),
   getIdentifyingPartyConfig: jest.fn(),
 }));
@@ -22,13 +22,13 @@ describe('When checking identifyingPartyHealthCheck', () => {
 
     getIdentifyingPartyConfig.mockReturnValue(value);
     trimTrailingSlash.mockImplementation((url) => url);
-    getIdentifyingPartyHealthcheck.mockResolvedValue();
+    checkDependentServiceHealth.mockResolvedValue();
 
     const result = await identifyingPartyHealthCheck(key, value);
 
     expect(getIdentifyingPartyConfig).toHaveBeenCalledWith(key, value);
     expect(trimTrailingSlash).toHaveBeenCalledWith(value.url);
-    expect(getIdentifyingPartyHealthcheck).toHaveBeenCalledWith(value.url);
+    expect(checkDependentServiceHealth).toHaveBeenCalledWith(value.url);
     expect(result).toEqual({
       key,
       type: key,
@@ -43,13 +43,13 @@ describe('When checking identifyingPartyHealthCheck', () => {
 
     getIdentifyingPartyConfig.mockReturnValue(value);
     trimTrailingSlash.mockImplementation((url) => url);
-    getIdentifyingPartyHealthcheck.mockResolvedValue();
+    checkDependentServiceHealth.mockResolvedValue();
 
     const result = await identifyingPartyHealthCheck(key, value);
 
     expect(getIdentifyingPartyConfig).toHaveBeenCalledWith(key, value);
     expect(trimTrailingSlash).toHaveBeenCalledWith(value.interactionBaseUrl);
-    expect(getIdentifyingPartyHealthcheck).toHaveBeenCalledWith(value.interactionBaseUrl);
+    expect(checkDependentServiceHealth).toHaveBeenCalledWith(value.interactionBaseUrl);
     expect(result).toEqual({
       key,
       type: key,
@@ -65,13 +65,13 @@ describe('When checking identifyingPartyHealthCheck', () => {
 
     getIdentifyingPartyConfig.mockReturnValue(value);
     trimTrailingSlash.mockImplementation((url) => url);
-    getIdentifyingPartyHealthcheck.mockRejectedValue(new Error(errorMessage));
+    checkDependentServiceHealth.mockRejectedValue(new Error(errorMessage));
 
     const result = await identifyingPartyHealthCheck(key, value);
 
     expect(getIdentifyingPartyConfig).toHaveBeenCalledWith(key, value);
     expect(trimTrailingSlash).toHaveBeenCalledWith(value.url);
-    expect(getIdentifyingPartyHealthcheck).toHaveBeenCalledWith(value.url);
+    expect(checkDependentServiceHealth).toHaveBeenCalledWith(value.url);
     expect(result).toEqual({
       key,
       status: new Error(errorMessage).toString(),
@@ -87,7 +87,7 @@ describe('When checking identifyingPartyHealthCheck', () => {
 
     expect(getIdentifyingPartyConfig).toHaveBeenCalledWith(key, value);
     expect(trimTrailingSlash).not.toHaveBeenCalled();
-    expect(getIdentifyingPartyHealthcheck).not.toHaveBeenCalled();
+    expect(checkDependentServiceHealth).not.toHaveBeenCalled();
     expect(result).toBeNull();
   });
 
@@ -100,7 +100,7 @@ describe('When checking identifyingPartyHealthCheck', () => {
 
     expect(getIdentifyingPartyConfig).toHaveBeenCalledWith(key, value);
     expect(trimTrailingSlash).not.toHaveBeenCalled();
-    expect(getIdentifyingPartyHealthcheck).not.toHaveBeenCalled();
+    expect(checkDependentServiceHealth).not.toHaveBeenCalled();
     expect(result).toBeNull();
   });
 });

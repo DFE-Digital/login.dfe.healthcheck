@@ -1,5 +1,4 @@
 const rp = require('login.dfe.request-promise-retry');
-const jwtStrategy = require('login.dfe.jwt-strategies');
 
 const {
   CONFIG_DEVICES_API_KEY,
@@ -12,14 +11,13 @@ const {
 const {
   trimTrailingSlash,
   shouldCheckDevicesApi,
-  getApiConfig,
-  getApiHealthCheck,
+  getApiUrl,
+  checkDependentServiceHealth,
   getIdentifyingPartyConfig,
-  getIdentifyingPartyHealthcheck,
+
 } = require('../lib/utils');
 
 jest.mock('login.dfe.request-promise-retry');
-jest.mock('login.dfe.jwt-strategies');
 
 describe('utils', () => {
   afterEach(() => {
@@ -77,88 +75,46 @@ describe('utils', () => {
     });
   });
 
-  describe('getApiConfig function', () => {
+  describe('getApiUrl function', () => {
     it('should return null when value is not an object', () => {
       const value = 'string-value';
-      const result = getApiConfig('dsi-test-api', value);
+      const result = getApiUrl('dsi-test-api', value);
       expect(result).toBe(null);
     });
 
     it(`should return null when type is not '${CONFIG_API_TYPE}'`, () => {
       const value = { type: 'Sequelize', service: { url: 'http://test-api-service.com' } };
-      const result = getApiConfig('dsi-test-api', value);
+      const result = getApiUrl('dsi-test-api', value);
       expect(result).toBe(null);
     });
 
     it('should return null when service object is not defined', () => {
       const value = { type: CONFIG_API_TYPE };
-      const result = getApiConfig('dsi-test-api', value);
+      const result = getApiUrl('dsi-test-api', value);
       expect(result).toBe(null);
     });
 
     it('should return null when shouldCheckDevicesApi is false', () => {
       const value = { type: CONFIG_API_TYPE, service: { url: 'http://test-api-service.com' } };
-      const result = getApiConfig('devices', value);
+      const result = getApiUrl('devices', value);
 
       expect(result).toBe(null);
     });
     it('should return null when shouldCheckDevicesApi is true but service is not defined', () => {
-      const result = getApiConfig('dsi-test-api', { type: CONFIG_API_TYPE });
+      const result = getApiUrl('dsi-test-api', { type: CONFIG_API_TYPE });
 
       expect(result).toBe(null);
     });
 
-    it('should return service when all conditions are met', () => {
-      const result = getApiConfig('test', { type: CONFIG_API_TYPE, service: { url: 'http://dsi-test-api.com' } });
-      expect(result).toEqual({ url: 'http://dsi-test-api.com' });
-    });
-  });
+    it('should return null when service type is api but  service url is missing', () => {
+      const result = getApiUrl('dsi-test-api', { type: CONFIG_API_TYPE, service: {} });
 
-  describe('getApiHealthCheck function', () => {
-    const apiService = { url: 'http://dsi-test-api.com' };
-    const token = 'test-token';
-    const healthCheckResponse = {
-      status: 'ok',
-      details: [
-        {
-          key: 'connectionString',
-          path: 'notifications.connectionString',
-          status: 'ok',
-        },
-      ],
-    };
-
-    it('should successfully return health check response if auth token valid', async () => {
-      jwtStrategy.mockReturnValue({ getBearerToken: jest.fn().mockResolvedValue(token) });
-      rp.mockResolvedValue(healthCheckResponse);
-
-      const result = await getApiHealthCheck(apiService);
-
-      expect(jwtStrategy).toHaveBeenCalledWith(apiService);
-      expect(rp).toHaveBeenCalledWith({
-        method: 'GET',
-        uri: `${apiService.url}/healthcheck`,
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-        json: true,
-      });
-      expect(result).toEqual(healthCheckResponse);
+      expect(result).toBe(null);
     });
 
-    it('should throw an error if there is an exception', async () => {
-      const expectedError = new Error('Test error').toString();
-      jwtStrategy.mockReturnValue({ getBearerToken: jest.fn().mockResolvedValue(token) });
-      rp.mockRejectedValue(expectedError);
-
-      await expect(getApiHealthCheck(apiService)).rejects.toThrow(expectedError);
-    });
-
-    it('should throw an error if auth token is not valid', async () => {
-      const invalidTokenError = new Error('Not authorized').toString();
-      jwtStrategy.mockReturnValue({ getBearerToken: jest.fn().mockRejectedValue(invalidTokenError) });
-
-      await expect(getApiHealthCheck(apiService)).rejects.toThrow(invalidTokenError);
+    it('should return the service url when all conditions are met', () => {
+      const result = getApiUrl('test', { type: CONFIG_API_TYPE, service: { url: 'http://dsi-test-api.com' } });
+      expect(result).toEqual('http://dsi-test-api.com');
     });
   });
 
@@ -188,7 +144,7 @@ describe('utils', () => {
     });
   });
 
-  describe('getIdentifyingPartyHealthcheck', () => {
+  describe('checkDependentServiceHealth', () => {
     it('should successfully return health check response', async () => {
       const url = 'http://dsi-test-Identifying-party.com';
       const healthCheckResponse = {
@@ -197,7 +153,7 @@ describe('utils', () => {
 
       rp.mockResolvedValue(healthCheckResponse);
 
-      const result = await getIdentifyingPartyHealthcheck(url);
+      const result = await checkDependentServiceHealth(url);
 
       expect(rp).toHaveBeenCalledWith({
         method: 'GET',
@@ -213,7 +169,7 @@ describe('utils', () => {
 
       rp.mockRejectedValue(expectedError);
 
-      await expect(getIdentifyingPartyHealthcheck(url)).rejects.toThrow(expectedError);
+      await expect(checkDependentServiceHealth(url)).rejects.toThrow(expectedError);
     });
   });
 });

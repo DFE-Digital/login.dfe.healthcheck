@@ -1,17 +1,14 @@
 const apiHealthCheck = require('../lib/apiHealthCheck');
-const { getApiHealthCheck, getApiConfig } = require('../lib/utils');
+const { checkDependentServiceHealth, getApiUrl, trimTrailingSlash } = require('../lib/utils');
 const constants = require('../constants/constants');
 
 jest.mock('../lib/utils', () => ({
-  getApiHealthCheck: jest.fn(),
-  getApiConfig: jest.fn(),
+  checkDependentServiceHealth: jest.fn(),
+  getApiUrl: jest.fn(),
+  trimTrailingSlash: jest.fn(),
 }));
 
 describe('When checking apiHealthCheck', () => {
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
-
   const key = 'dsi-api-service';
   const value = {
     service: {
@@ -21,14 +18,18 @@ describe('When checking apiHealthCheck', () => {
   };
   const { service } = value;
 
+  beforeEach(() => {
+    trimTrailingSlash.mockReset().mockImplementation((url) => url);
+    getApiUrl.mockReset().mockReturnValue(service.url);
+  });
+
   it('should return healthy status when API health check is successful', async () => {
-    getApiConfig.mockReturnValue(service);
-    getApiHealthCheck.mockResolvedValue();
+    checkDependentServiceHealth.mockResolvedValue();
 
     const result = await apiHealthCheck(key, value);
 
-    expect(getApiConfig).toHaveBeenCalledWith(key, value);
-    expect(getApiHealthCheck).toHaveBeenCalledWith(service);
+    expect(getApiUrl).toHaveBeenCalledWith(key, value);
+    expect(checkDependentServiceHealth).toHaveBeenCalledWith(service.url);
     expect(result).toEqual({
       key,
       type: value.type,
@@ -39,13 +40,12 @@ describe('When checking apiHealthCheck', () => {
   it('should return error when API health check fails', async () => {
     const errorMessage = 'Error occurred during health check';
 
-    getApiConfig.mockReturnValue(service);
-    getApiHealthCheck.mockRejectedValue(new Error(errorMessage));
+    checkDependentServiceHealth.mockRejectedValue(new Error(errorMessage));
 
     const result = await apiHealthCheck(key, value);
 
-    expect(getApiConfig).toHaveBeenCalledWith(key, value);
-    expect(getApiHealthCheck).toHaveBeenCalledWith(service);
+    expect(getApiUrl).toHaveBeenCalledWith(key, value);
+    expect(checkDependentServiceHealth).toHaveBeenCalledWith(service.url);
     expect(result).toEqual({
       key,
       type: value.type,
@@ -54,24 +54,24 @@ describe('When checking apiHealthCheck', () => {
   });
 
   it('should return null when API configuration is missing', async () => {
-    getApiConfig.mockReturnValue(null);
+    getApiUrl.mockReset().mockReturnValue(null);
 
     const result = await apiHealthCheck(key, value);
 
-    expect(getApiConfig).toHaveBeenCalledWith(key, value);
-    expect(getApiHealthCheck).not.toHaveBeenCalled();
+    expect(getApiUrl).toHaveBeenCalledWith(key, value);
+    expect(checkDependentServiceHealth).not.toHaveBeenCalled();
     expect(result).toBeNull();
   });
 
   it('should return null when API configuration has no URL', async () => {
-    const apiService = {};
+    value.service = {};
 
-    getApiConfig.mockReturnValue(apiService);
+    getApiUrl.mockReset().mockReturnValue(null);
 
     const result = await apiHealthCheck(key, value);
 
-    expect(getApiConfig).toHaveBeenCalledWith(key, value);
-    expect(getApiHealthCheck).not.toHaveBeenCalled();
+    expect(getApiUrl).toHaveBeenCalledWith(key, value);
+    expect(checkDependentServiceHealth).not.toHaveBeenCalled();
     expect(result).toBeNull();
   });
 });
