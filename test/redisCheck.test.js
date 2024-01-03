@@ -77,7 +77,7 @@ describe('When running redis check', () => {
     expect(actual).toMatchObject({
       key: CONFIG_CONNECTION_STRING_KEY,
       path: 'path.to.key',
-      status: constants.HEALTY_STATUS_MESSAGE,
+      status: constants.HEALTHY_STATUS_MESSAGE,
     });
   });
 

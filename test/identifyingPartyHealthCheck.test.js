@@ -32,7 +32,7 @@ describe('When checking identifyingPartyHealthCheck', () => {
     expect(result).toEqual({
       key,
       type: key,
-      status: constants.HEALTY_STATUS_MESSAGE,
+      status: constants.HEALTHY_STATUS_MESSAGE,
     });
   });
 
@@ -53,7 +53,7 @@ describe('When checking identifyingPartyHealthCheck', () => {
     expect(result).toEqual({
       key,
       type: key,
-      status: constants.HEALTY_STATUS_MESSAGE,
+      status: constants.HEALTHY_STATUS_MESSAGE,
     });
   });
 

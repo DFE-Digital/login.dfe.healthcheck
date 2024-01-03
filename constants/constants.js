@@ -1,7 +1,7 @@
 module.exports = {
   HEALTH_STATUS_UP: 'up',
   HEALTH_STATUS_DOWN: 'down',
-  HEALTY_STATUS_MESSAGE: 'OK',
+  HEALTHY_STATUS_MESSAGE: 'OK',
   CONFIG_REDIS_URL_KEY: 'redisurl',
   CONFIG_CONNECTION_STRING_KEY: 'connectionstring',
   CONFIG_REDIS_CONNECTION_STRING_KEY: 'redisconnectionstring',

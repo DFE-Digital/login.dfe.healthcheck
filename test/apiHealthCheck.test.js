@@ -33,7 +33,7 @@ describe('When checking apiHealthCheck', () => {
     expect(result).toEqual({
       key,
       type: value.type,
-      status: constants.HEALTY_STATUS_MESSAGE,
+      status: constants.HEALTHY_STATUS_MESSAGE,
     });
   });
 
