@@ -14,7 +14,6 @@ module.exports = {
   CONFIG_SEQUELIZE_TYPE: 'sequelize',
   CONFIG_DATABASE_KEY: 'database',
   CONFIG_DEVICES_API_KEY: 'devices',
-  PROD_URL_KEYWORDS: ['__pr__', 'p01', 'p02'],
   CONFIG_API_TYPE: 'api',
   CONFIG_IDENTIFYING_PARTY_SECTION: 'identifyingParty',
   CONFIG_OIDC_SECTION: 'oidc',
