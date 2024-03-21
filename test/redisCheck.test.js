@@ -3,9 +3,6 @@ jest.mock('ioredis');
 const Redis = require('ioredis');
 const redisCheck = require('./../lib/redisCheck');
 const EventEmitter = require('events');
-const constants = require('../constants/constants');
-
-const { CONFIG_CONNECTION_STRING_KEY, CONFIG_REDIS_TYPE } = constants;
 
 class RedisStub extends EventEmitter {
   disconnect() {
@@ -33,7 +30,7 @@ describe('When running redis check', () => {
   });
 
   it('then it should check if key is connectionstring and value starts with redis://', async () => {
-    const checkPromise = redisCheck(CONFIG_CONNECTION_STRING_KEY, 'redis://unit.test:6379', 'path.to.key', null);
+    const checkPromise = redisCheck('connectionString', 'redis://unit.test:6379', 'path.to.key', null);
     stub.emit('ready');
     await checkPromise;
 
@@ -42,7 +39,7 @@ describe('When running redis check', () => {
   });
 
   it('then it should not check if key is connectionstring but value does not starts with redis://', async () => {
-    const checkPromise = redisCheck(CONFIG_CONNECTION_STRING_KEY, 'sql://unit.test:6379', 'path.to.key', null);
+    const checkPromise = redisCheck('connectionString', 'sql://unit.test:6379', 'path.to.key', null);
     stub.emit('ready');
     await checkPromise;
 
@@ -51,7 +48,7 @@ describe('When running redis check', () => {
 
   it('then it should check if value has a type of redis and has a param that starts redis://', async () => {
     const checkPromise = redisCheck('someKey', {
-      type: CONFIG_REDIS_TYPE,
+      type: 'redis',
       params: { 'constr': 'redis://unit.test:6379' }
     }, 'path.to.key', null);
     stub.emit('ready');
@@ -70,26 +67,26 @@ describe('When running redis check', () => {
   });
 
   it('then it should return ok if redis connects', async () => {
-    const checkPromise = redisCheck(CONFIG_CONNECTION_STRING_KEY, 'redis://unit.test:6379', 'path.to.key', null);
+    const checkPromise = redisCheck('connectionString', 'redis://unit.test:6379', 'path.to.key', null);
     stub.emit('ready');
     const actual = await checkPromise;
 
     expect(actual).toMatchObject({
-      key: CONFIG_CONNECTION_STRING_KEY,
+      key: 'connectionString',
       path: 'path.to.key',
-      status: constants.HEALTHY_STATUS_MESSAGE,
+      status: 'ok',
     });
   });
 
   it('then it should return error code if redis fails to connect', async () => {
-    const checkPromise = redisCheck(CONFIG_CONNECTION_STRING_KEY, 'redis://unit.test:6379', 'path.to.key', null);
+    const checkPromise = redisCheck('connectionString', 'redis://unit.test:6379', 'path.to.key', null);
     stub.emit('error', { code: 'TESTERROR' });
     const actual = await checkPromise;
 
     expect(actual).toMatchObject({
-      key: CONFIG_CONNECTION_STRING_KEY,
+      key: 'connectionString',
       path: 'path.to.key',
-      status: { code: 'TESTERROR' }.toString(),
+      status: 'TESTERROR',
     });
   });
 });

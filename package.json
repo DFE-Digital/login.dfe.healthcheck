@@ -1,6 +1,6 @@
 {
   "name": "login.dfe.healthcheck",
-  "version": "4.0.0",
+  "version": "2.1.0",
   "description": "Express middleware to provide health check endpoints",
   "main": "lib/index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "test": "./node_modules/.bin/jest"
   },
   "engines": {
-    "node": "18.x.x"
+    "node": "12.x.x"
   },
   "repository": {
     "type": "git",
@@ -24,8 +24,7 @@
     "express": "^4.17.3",
     "ioredis": "^4.14.1",
     "lodash": "^4.17.21",
-    "login.dfe.request-promise-retry": "git+https://github.com/DFE-Digital/login.dfe.request-promise-retry.git#v3.0.0",
-    "pg": "^8.11.3",
+    "pg": "^7.12.1",
     "sequelize": "^6.17.0"
   },
   "devDependencies": {
