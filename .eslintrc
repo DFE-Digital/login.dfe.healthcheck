@@ -7,11 +7,5 @@
     "strict": "off",
     "no-underscore-dangle": ["error", { "allowAfterThis": true }],
     "max-len": 0
-  },
-  "parserOptions": {
-    "ecmaVersion": 2020
-  },
-  "env": {
-    "jest": true
   }
 }
