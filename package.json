@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/DFE-Digital/login.dfe.healthcheck#readme",
   "dependencies": {
-    "express": "^4.17.3",
+    "express": "^4.19.2",
     "ioredis": "^5.3.2",
     "lodash": "^4.17.21",
     "pg": "^8.11.2",
