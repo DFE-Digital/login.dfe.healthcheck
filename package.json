@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "dev": "node ./test/harness.js",
-    "test": "./node_modules/.bin/jest"
+    "test": "jest --runInBand --coverage"
   },
   "repository": {
     "type": "git",
