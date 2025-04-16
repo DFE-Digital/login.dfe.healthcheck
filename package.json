@@ -1,6 +1,6 @@
 {
   "name": "login.dfe.healthcheck",
-  "version": "3.0.2",
+  "version": "3.1.3-beta.1",
   "description": "Express middleware to provide health check endpoints",
   "main": "lib/index.js",
   "scripts": {
