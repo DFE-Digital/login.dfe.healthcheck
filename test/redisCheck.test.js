@@ -85,6 +85,7 @@ describe("When running redis check", () => {
   });
 
   it("then it should return ok if redis connects", async () => {
+    const intentionalError = "ESLINT ERROR";
     const checkPromise = redisCheck(
       "connectionString",
       "redis://unit.test:6379",
