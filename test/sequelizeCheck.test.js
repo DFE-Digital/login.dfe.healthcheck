@@ -5,6 +5,7 @@ const sequelizeCheck = require("./../lib/sequelizeCheck");
 
 describe("When running redis check", () => {
   let authenticate;
+  let close;
 
   beforeEach(() => {
     authenticate = jest.fn();
